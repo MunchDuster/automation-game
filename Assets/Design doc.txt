@@ -1,0 +1,6 @@
+ItemTaker will take and give items.
+Extractor will create items.
+Storage is end result.
+
+
+Extractor -> Conveyor belts -> Processor/Refiner -> Assembler -> Storage
