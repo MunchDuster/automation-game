@@ -63,22 +63,20 @@ public abstract class ConveyorBelt : ItemTaker
         float deltaDistance = Time.fixedDeltaTime * speed;
         
         // Check if furthest item (will be) at end
-        _items[0].Distance += deltaDistance; // Check ahead
-        bool lastItemIsAtEnd = _items[0].Distance >= length;
+        bool lastItemIsAtEnd = _items[0].Distance + deltaDistance >= length;
+
+        if (CanGive(_items[0].Item))
+        {
+            Debug.Log(_items[0].Distance);
+        }
         if (lastItemIsAtEnd)
         {
             if (CanGive(0))
             {
                 Debug.Log("Giving item");
                 Give(0);
-                // Now furthest item is not blocked (second furthest before = furthest now)
             }
         }
-        else
-        {
-            _items[0].Distance -= deltaDistance; // Undo checking ahead
-        }
-
 
         for (int i = 0; i < _items.Count; i++)
         {
