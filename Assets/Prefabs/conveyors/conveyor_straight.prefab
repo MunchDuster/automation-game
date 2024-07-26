@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1728589149664837557}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 0, z: 0}
+  m_LocalPosition: {x: 4, y: 0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -81,10 +81,11 @@ MonoBehaviour:
   receiver: {fileID: 0}
   start: {fileID: 2582963287408197081}
   end: {fileID: 3736283126509616098}
-  length: 5
-  speed: 2
+  length: 4
+  speed: 4
   itemSize: 0.4
   blockTake: 0
+  lerp: 0
 --- !u!1 &3469432184803558725
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,8 +114,8 @@ Transform:
   m_GameObject: {fileID: 3469432184803558725}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.5, y: 0.05, z: 0}
-  m_LocalScale: {x: 5, y: 0.1, z: 1}
+  m_LocalPosition: {x: 2, y: 0.05, z: 0}
+  m_LocalScale: {x: 4, y: 0.1, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1664387956842525988}
@@ -215,7 +216,7 @@ Transform:
   m_GameObject: {fileID: 4351282406551290070}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
