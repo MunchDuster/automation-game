@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class ItemTaker : MonoBehaviour
 {
-    [SerializeField] private ItemTaker receiver;
+    public ItemTaker receiver;
 
     public abstract void Take(Transform item, float startingDistance);
     public abstract bool CanTake(Transform item);

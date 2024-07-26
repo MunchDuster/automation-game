@@ -21,6 +21,7 @@ public abstract class ConveyorBelt : ItemTaker
     // DEBUG
     [SerializeField] [Range(0f, 1f)] private float lerp = 0;
     
+    public Action OnTriedGive;
     private class ConveyorItem
     {
         public Transform Item;
@@ -76,6 +77,7 @@ public abstract class ConveyorBelt : ItemTaker
                 Debug.Log("Giving item");
                 Give(0);
             }
+            OnTriedGive?.Invoke();
         }
 
         for (int i = 0; i < _items.Count; i++)
