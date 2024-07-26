@@ -29,9 +29,8 @@ public class Extractor : ItemTaker
                 Debug.Log("Extractor cant give! Receiver full!");
                 Give(_item, 0);
                 _item = null;
-                return;
             }
-
+            return;
         }
         
         _timeSinceLastExtraction += Time.fixedDeltaTime;

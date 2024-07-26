@@ -24,10 +24,12 @@ public abstract class ConveyorBelt : ItemTaker
     private class ConveyorItem
     {
         public Transform Item;
+        public bool Blocked;
         public float Distance;
 
         public ConveyorItem(Transform item, float distance)
         {
+            Blocked = false;
             Item = item;
             Distance = distance;
         }
@@ -82,16 +84,25 @@ public abstract class ConveyorBelt : ItemTaker
         {
             ConveyorItem item = _items[i];
 
+            if (item.Blocked)
+            {
+                continue;
+            }
+            
             item.Distance += deltaDistance;
 
             if (item.Distance >= _freeLength) // Remove if at/past end
             {
-                Debug.Log($"Blocking {item.Item.gameObject.name} {_freeLength}");
+                Debug.Log($"Blocking '{item.Item.gameObject.name}', _freeLength: {_freeLength}");
+                item.Distance = _freeLength;
                 _freeLength = Mathf.Max(_freeLength - itemSize, 0);
+                item.Blocked = true;
             }
 
             UpdateItemTransform(item); // s l i d e
         }
+        
+        Debug.Log($"canTake: {CanTake(transform)}");
     }
 
     private void UpdateItemTransform(ConveyorItem item)
@@ -110,6 +121,12 @@ public abstract class ConveyorBelt : ItemTaker
         base.Give(_items[index].Item, _items[index].Distance - length);
         _items.RemoveAt(index);
         _freeLength = length;
+
+        // unblock all items
+        for (int i = 0; i < _items.Count; i++)
+        {
+            _items[i].Blocked = false;
+        }
     }
 
     private void OnDrawGizmosSelected()
