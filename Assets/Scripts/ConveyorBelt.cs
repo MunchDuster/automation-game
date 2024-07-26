@@ -35,12 +35,10 @@ public abstract class ConveyorBelt : ItemTaker
     
     private List<ConveyorItem> _items = new();
     private float _freeLength; // Length that is not blocked
-    private float minDistance => itemSize / 2f;
-    private float maxDistanceAbsolute => length - itemSize / 2f;
 
     private void Awake()
     {
-        _freeLength = length;//maxDistanceAbsolute;
+        _freeLength = length;
     }
 
     public override void Take(Transform item, float startingDistance)
