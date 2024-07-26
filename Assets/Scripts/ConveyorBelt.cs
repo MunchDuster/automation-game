@@ -82,8 +82,6 @@ public abstract class ConveyorBelt : ItemTaker
         {
             ConveyorItem item = _items[i];
 
-            SetItemColor(item.Item, Color.red);
-
             item.Distance += deltaDistance;
 
             if (item.Distance >= _freeLength) // Remove if at/past end
@@ -105,11 +103,6 @@ public abstract class ConveyorBelt : ItemTaker
     protected abstract Vector3 CalculatePosition(float lerp);
     protected abstract Quaternion CalculateRotation(float lerp);
     
-
-    private void SetItemColor(Transform item, Color color)
-    {
-        item.GetChild(0).GetComponent<MeshRenderer>().material.color = color;
-    }
 
     private bool CanGive(int index) => CanGive(_items[index].Item);
     private void Give(int index)
