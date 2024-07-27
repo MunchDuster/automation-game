@@ -66,10 +66,6 @@ public abstract class ConveyorBelt : ItemTaker
         // Check if furthest item (will be) at end
         bool lastItemIsAtEnd = _items[0].Distance + deltaDistance >= length;
 
-        if (CanGive(_items[0].Item))
-        {
-            Debug.Log(_items[0].Distance);
-        }
         if (lastItemIsAtEnd)
         {
             if (CanGive(0))

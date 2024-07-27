@@ -5,7 +5,6 @@ namespace DefaultNamespace
     public class ConveyorBeltTurn : ConveyorBelt
     {
         [SerializeField] private Transform pivot;
-        [SerializeField] private float radius = 0.5f;
         [SerializeField] private float angleMultiplier = 1f;
         protected override Vector3 CalculatePosition(float lerp)
         {
