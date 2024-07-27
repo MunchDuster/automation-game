@@ -79,7 +79,7 @@ public abstract class ConveyorBelt : ItemTaker
         float deltaDistance = Time.fixedDeltaTime * speed;
         
         // Check if furthest item (will be) at end
-        bool IsLastItemAtEnd() => _items[0].Distance + deltaDistance >= length;
+        bool IsLastItemAtEnd() => _items.Count > 0 && _items[0].Distance + deltaDistance >= length;
         while(IsLastItemAtEnd())
         {
             if (CanGive(0))
