@@ -45,17 +45,37 @@ namespace DefaultNamespace
                     Vector3Int inputPos = taker.position + inputOffset;
                     Vector3Int inputChunkPos = Chunk.GetChunkPosition(inputPos);
                     Vector3Int inputChunkLocalPos = Chunk.GetChunkLocalPosition(inputPos);
-                    if (_chunks.TryGetValue(inputChunkPos, out Chunk chunk) &&
-                        chunk.TryGetItem(inputChunkLocalPos, out Device inputDevice) &&
-                        inputDevice is ItemTaker inputGiver)
+
+                    bool success = true;
+                    
+                    if(!_chunks.TryGetValue(inputChunkPos, out Chunk chunk))
                     {
-                        inputGiver.receiver = taker;
-                        Debug.Log($"Successful connection from {inputGiver.gameObject.name} to {device.gameObject.name}");
+                        success = false;
+                        Debug.LogError("CHUNK DOESNT EXIST!");
                     }
-                    else
+
+                    if(!chunk.TryGetItem(inputChunkLocalPos, out Device inputDevice))
                     {
-                        Debug.Log($"Couldn't find giver for {device.gameObject.name}");
+                        success = false;
+                        Debug.LogError("POSITION IN CHUNK IS EMPTY!");
                     }
+
+                    ItemTaker inputGiver = (ItemTaker)inputDevice;
+                    if (inputGiver == null)
+                    {
+                        success = false;
+                        Debug.LogError("DEVICE AT INPUT PLACE IS NOT ITEM TAKER!");
+                    }
+
+                    if (!success)
+                    {
+                        // Log everything needed to understand why input wasnt found.
+                        Debug.Log($"Couldn't find connection for {device.gameObject.name}:  at {device.position}, local pos: {Chunk.GetChunkLocalPosition(device.position)}.");
+                        Debug.Log($"Looking for input at {inputPos}, local pos: {inputChunkLocalPos}, chunk pos: {inputChunkPos}");
+                        continue;
+                    }
+
+                    inputGiver.receiver = taker;
                 }
             }
             Debug.Log("Connections complete.");
