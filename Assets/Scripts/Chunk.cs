@@ -17,11 +17,11 @@ namespace DefaultNamespace
 
         public void AddItem(Device device)
         {
-            _devices.Add(device.position, device);
+            _devices.Add(GetChunkLocalPosition(device.position), device);
         }
         public void RemoveItem(Device device)
         {
-            _devices.Remove(device.position);
+            _devices.Remove(GetChunkLocalPosition(device.position));
         }
         
         public List<Device> Items => _devices.Values.ToList();
