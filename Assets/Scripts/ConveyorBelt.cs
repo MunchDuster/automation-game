@@ -139,6 +139,8 @@ public abstract class ConveyorBelt : ItemTaker
 
     protected virtual void OnDrawGizmosSelected()
     {
+        if (!transform) return;
+
         Vector3 lastPoint = CalculatePosition(0);
         const float delta = 1f / 20f;
         for (float i = delta; i <= 1.001f; i += delta)
