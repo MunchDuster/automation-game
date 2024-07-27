@@ -12,15 +12,22 @@ namespace DefaultNamespace
         public Transform deviceContainer;
 
         private readonly Dictionary<Vector3Int, Chunk> _chunks = new();
+        [SerializeField] private bool initializeOnStart = true;
 
         private void Start()
         {
-            InitialiseExistingDevices();
+            if (initializeOnStart)
+            {
+                InitialiseExistingDevices(deviceContainer, true);
+            }
         }
 
-        private void InitialiseExistingDevices()
+        /// <summary>
+        /// Adds all Devices in container to chunks and can connect them together
+        /// </summary>
+        public void InitialiseExistingDevices(Transform container, bool autoConnect)
         {
-            Device[] devices = deviceContainer.GetComponentsInChildren<Device>();
+            Device[] devices = container.GetComponentsInChildren<Device>();
 
             // Add each device existing to database
             foreach (Device device in devices)
@@ -28,7 +35,10 @@ namespace DefaultNamespace
                 AddDevice(device);
             }
 
-            ConnectDevicesTogether(devices);
+            if (autoConnect)
+            {
+                ConnectDevicesTogether(devices);
+            }
         }
 
         /// <summary>
@@ -94,8 +104,7 @@ namespace DefaultNamespace
         public void AddDevice(Device device)
         {
             Vector3Int chunkPos = Chunk.GetChunkPosition(device.position);
-            Chunk chunk;
-            if (!_chunks.TryGetValue(chunkPos, out chunk))
+            if (!_chunks.TryGetValue(chunkPos, out Chunk chunk))
             {
                 chunk = new Chunk(chunkPos);
                 _chunks.Add(chunkPos, chunk);
@@ -105,6 +114,7 @@ namespace DefaultNamespace
             if (chunk.TryGetItem(localPos, out Device device2))
             {
                 Debug.LogError($"Cant add device {device.gameObject.name} to local pos {localPos} as place is already taken by {device2.gameObject.name}");
+                return;
             }
             chunk.AddItem(device);
         }
