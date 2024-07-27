@@ -25,11 +25,11 @@ namespace DefaultNamespace
         }
         
         public List<Device> Items => _devices.Values.ToList();
-        public bool CanAddItem(Vector3Int position) => !_devices.ContainsKey(position);
         public bool IsItemInChunk(Device device) => GetChunkLocalPosition(device.position) == _position;
        
         public bool TryGetItem(Vector3Int localPosition, out Device device) => _devices.TryGetValue(localPosition, out device);
 
+        public bool CheckOccupied(Vector3Int localPosition) => _devices.ContainsKey(localPosition);
         public static Vector3Int GetChunkPosition(Vector3Int worldPosition) => worldPosition / ChunkSize;
         
         public static Vector3Int GetChunkLocalPosition(Vector3Int worldPosition) => new(
