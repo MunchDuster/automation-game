@@ -13,14 +13,14 @@ public abstract class ConveyorBelt : ItemTaker
 {
     protected virtual float length => 1;
     
-    [SerializeField] protected Point start;
-    [SerializeField] protected Point end;
+    public Point start;
+    public Point end;
     [SerializeField] private float speed = 2;
     [SerializeField] private float itemSize = 0.4f;
     [SerializeField] private bool blockTake = false;
 
     [Serializable]
-    protected struct Point
+    public struct Point
     {
         public Vector3 localRotationEuler;
         public Vector3 localPosition;

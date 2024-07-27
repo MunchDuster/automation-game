@@ -118,5 +118,24 @@ namespace DefaultNamespace
             }
             chunk.AddItem(device);
         }
+
+        public void RemoveDevice(Device device)
+        {
+            Vector3Int chunkPos = Chunk.GetChunkPosition(device.position);
+            if (!_chunks.TryGetValue(chunkPos, out Chunk chunk))
+            {
+                chunk = new Chunk(chunkPos);
+                _chunks.Add(chunkPos, chunk);
+            }
+
+            chunk.RemoveItem(device);
+        }
+
+        public bool CheckOccupied(Vector3Int position)
+        {
+            Vector3Int chunkPos = Chunk.GetChunkPosition(position);
+            Vector3Int localPos = Chunk.GetChunkLocalPosition(position);
+            return _chunks.TryGetValue(chunkPos, out Chunk chunk) && chunk.CheckOccupied(localPos);
+        }
     }
 }
