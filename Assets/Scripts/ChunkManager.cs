@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace DefaultNamespace
 {
+    /// <summary>
+    /// The 'world' manager, handles chunk creation and setting up interfacing of devices.
+    /// THIS IS NOT TERRAIN RELATED.
+    /// </summary>
     public class ChunkManager  : MonoBehaviour
     {
         public Transform deviceContainer;
@@ -27,6 +31,9 @@ namespace DefaultNamespace
             ConnectDevicesTogether(devices);
         }
 
+        /// <summary>
+        /// Go through each device and connect them together by where they expect inputs
+        /// </summary>
         private void ConnectDevicesTogether(Device[] devices)
         {
             Debug.Log("Making connections between devices...");
@@ -81,6 +88,9 @@ namespace DefaultNamespace
             Debug.Log("Connections complete.");
         }
 
+        /// <summary>
+        /// Puts a device in the appropriate chunk, if no chunk exists then a new one is created.
+        /// </summary>
         public void AddDevice(Device device)
         {
             Vector3Int chunkPos = Chunk.GetChunkPosition(device.position);

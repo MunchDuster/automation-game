@@ -5,9 +5,6 @@ using UnityEngine;
 /// <summary>
 /// Takes items from start to end,
 /// If fails to Give() then items start to bunch up (block)
-/// will not Take() if no space on conveyor
-/// Assume straight line for now
-///
 /// </summary>
 public abstract class ConveyorBelt : ItemTaker
 {

@@ -1,6 +1,10 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// These are the source of items, the equivalent of drills and miners in other games.
+/// THESE DO NOT TAKE IN ITEMS, ONLY GIVE.
+/// </summary>
 public class Extractor : ItemTaker
 {
     [SerializeField] private GameObject itemPrefab;
