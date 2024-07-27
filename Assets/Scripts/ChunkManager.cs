@@ -37,6 +37,9 @@ namespace DefaultNamespace
                     continue;
                 }
                 
+                if(device is Extractor)
+                    continue; // extractors have no inputs
+                
                 foreach (Vector3Int inputOffset in taker.Inputs)
                 {
                     Vector3Int inputPos = taker.position + inputOffset;
