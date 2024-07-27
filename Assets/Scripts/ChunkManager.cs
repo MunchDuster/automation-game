@@ -29,6 +29,7 @@ namespace DefaultNamespace
 
         private void ConnectDevicesTogether(Device[] devices)
         {
+            Debug.Log("Making connections between devices...");
             foreach (Device device in devices)
             {
                 if (!(device is ItemTaker taker))
@@ -41,8 +42,6 @@ namespace DefaultNamespace
                     Vector3Int inputPos = taker.position + inputOffset;
                     Vector3Int inputChunkPos = Chunk.GetChunkPosition(inputPos);
                     Vector3Int inputChunkLocalPos = Chunk.GetChunkLocalPosition(inputPos);
-                    Debug.Log($"DEVICE: {device.gameObject.name} at {device.position}, chunk pos: {Chunk.GetChunkLocalPosition(device.position)}");
-                    Debug.Log($"Looking for input at {inputPos}, local pos: {inputChunkLocalPos}, chunk pos: {inputChunkPos}");
                     if (_chunks.TryGetValue(inputChunkPos, out Chunk chunk) &&
                         chunk.TryGetItem(inputChunkLocalPos, out Device inputDevice) &&
                         inputDevice is ItemTaker inputGiver)
@@ -52,11 +51,11 @@ namespace DefaultNamespace
                     }
                     else
                     {
-                        Debug.Log($"Chunk exists: {_chunks.ContainsKey(inputChunkPos)}");
-                        Debug.Log($"Couldn't find connection for {device.gameObject.name}");
+                        Debug.Log($"Couldn't find giver for {device.gameObject.name}");
                     }
                 }
             }
+            Debug.Log("Connections complete.");
         }
 
         public void AddDevice(Device device)
