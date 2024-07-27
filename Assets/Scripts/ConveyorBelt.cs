@@ -39,8 +39,9 @@ public abstract class ConveyorBelt : ItemTaker
     private List<ConveyorItem> _items = new();
     private float _freeLength; // Length that is not blocked
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _freeLength = length;
     }
 

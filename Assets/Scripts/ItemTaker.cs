@@ -1,6 +1,7 @@
+using DefaultNamespace;
 using UnityEngine;
 
-public abstract class ItemTaker : MonoBehaviour
+public abstract class ItemTaker : Device
 {
     public ItemTaker receiver;
 
