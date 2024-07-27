@@ -6,12 +6,14 @@ using UnityEngine;
 /// Takes items from start to end,
 /// If fails to Give() then items start to bunch up (block)
 /// will not Take() if no space on conveyor
+/// Each track by default is assumed to be 1 unit long unless length overriden. (i.e corners)
 /// </summary>
 public abstract class ConveyorBelt : ItemTaker
 {
+    protected virtual float length => 1;
+    
     [SerializeField] protected Transform start;
     [SerializeField] protected Transform end;
-    [SerializeField] private float length = 4;
     [SerializeField] private float speed = 2;
     [SerializeField] private float itemSize = 0.4f;
     [SerializeField] private bool blockTake = false;
