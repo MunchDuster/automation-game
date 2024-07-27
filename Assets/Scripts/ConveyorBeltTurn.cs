@@ -6,7 +6,7 @@ namespace DefaultNamespace
     {
         protected override float length => Vector3.Distance(pivot.position, start.position) * Mathf.PI / 2f; // 90-degree angle is 1/4 of 2*pi*r = r*pi/2
         
-        [SerializeField] private Transform pivot;
+        [SerializeField] private Point pivot;
         [SerializeField] private float angleMultiplier = 1f;
         protected override Vector3 CalculatePosition(float lerp)
         {
@@ -23,5 +23,14 @@ namespace DefaultNamespace
         {
             return Quaternion.Slerp(start.rotation, end.rotation, lerp); 
         }
+        
+        protected override void OnDrawGizmosSelected()
+        {
+            base.OnDrawGizmosSelected();
+            
+            Gizmos.color = Color.green;
+            DrawArrow(pivot);
+        }
     }
+    
 }

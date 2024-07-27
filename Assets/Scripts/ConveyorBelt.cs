@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 /// <summary>
@@ -12,12 +13,22 @@ public abstract class ConveyorBelt : ItemTaker
 {
     protected virtual float length => 1;
     
-    [SerializeField] protected Transform start;
-    [SerializeField] protected Transform end;
+    [SerializeField] protected Point start;
+    [SerializeField] protected Point end;
     [SerializeField] private float speed = 2;
     [SerializeField] private float itemSize = 0.4f;
     [SerializeField] private bool blockTake = false;
-    
+
+    [Serializable]
+    protected struct Point
+    {
+        public Vector3 localRotationEuler;
+        public Vector3 localPosition;
+        public Transform parent;
+        public Quaternion localRotation => quaternion.Euler(localRotationEuler);
+        public Quaternion rotation => parent.rotation * localRotation;
+        public Vector3 position => parent.TransformPoint(localPosition);
+    }
     // DEBUG
     [SerializeField] [Range(0f, 1f)] private float lerp = 0;
     
@@ -68,9 +79,8 @@ public abstract class ConveyorBelt : ItemTaker
         float deltaDistance = Time.fixedDeltaTime * speed;
         
         // Check if furthest item (will be) at end
-        bool lastItemIsAtEnd = _items[0].Distance + deltaDistance >= length;
-
-        if (lastItemIsAtEnd)
+        bool IsLastItemAtEnd() => _items[0].Distance + deltaDistance >= length;
+        while(IsLastItemAtEnd())
         {
             if (CanGive(0))
             {
@@ -127,9 +137,8 @@ public abstract class ConveyorBelt : ItemTaker
         }
     }
 
-    private void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
-        
         Vector3 lastPoint = CalculatePosition(0);
         const float delta = 1f / 20f;
         for (float i = delta; i <= 1.001f; i += delta)
@@ -140,7 +149,17 @@ public abstract class ConveyorBelt : ItemTaker
             lastPoint = pos;
         }
         
+        Gizmos.color = Color.red;
+        DrawArrow(start);
+        DrawArrow(end);
+        
         Gizmos.color = Color.magenta;
         Gizmos.DrawSphere(CalculatePosition(lerp), 0.1f);
+    }
+
+    protected void DrawArrow(Point point)
+    {
+        Gizmos.DrawWireSphere(point.position, 0.03f);
+        Gizmos.DrawLine(point.position, point.position +  point.rotation * (Vector3.forward * 0.3f));
     }
 }
