@@ -7,15 +7,15 @@ public class Extractor : ItemTaker
     [SerializeField] private float extractionSpeed = 2;
     
     private float _timeSinceLastExtraction;
-    private Transform _item;
+    private Item _item;
     private int _itemNum;
     
-    public override void Take(Transform item, float startingDistance)
+    public override void Take(Item item, float startingDistance)
     {
         throw new Exception("Extractor is being given item!");
     }
 
-    public override bool CanTake(Transform item)
+    public override bool CanTake(Item item)
     {
         throw new Exception("Extractor is being asked if can take item!");
     }
@@ -40,8 +40,7 @@ public class Extractor : ItemTaker
         }
 
         _timeSinceLastExtraction = 0;
-        _item = Instantiate(itemPrefab, transform).transform;
-        _item.gameObject.name += $" {_itemNum}";
+        _item = new Item(transform.position, transform.rotation);
         _itemNum++;
     }
 }

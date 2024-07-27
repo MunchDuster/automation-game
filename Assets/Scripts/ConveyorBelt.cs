@@ -24,11 +24,11 @@ public abstract class ConveyorBelt : ItemTaker
     public Action OnTriedGive;
     private class ConveyorItem
     {
-        public Transform Item;
+        public Item Item;
         public bool Blocked;
         public float Distance;
 
-        public ConveyorItem(Transform item, float distance)
+        public ConveyorItem(Item item, float distance)
         {
             Blocked = false;
             Item = item;
@@ -45,15 +45,18 @@ public abstract class ConveyorBelt : ItemTaker
         _freeLength = length;
     }
 
-    public override void Take(Transform item, float startingDistance)
+    public override void Take(Item item, float startingDistance)
     {
+        if (item == null)
+        {
+            throw new Exception("Conveyor given null item!");
+        }
         ConveyorItem conveyorItem = new(item, startingDistance);
         _items.Add(conveyorItem);
-        item.SetParent(transform);
         UpdateItemTransform(conveyorItem);
     }
 
-    public override bool CanTake(Transform item) => _freeLength > 0.01f || blockTake;
+    public override bool CanTake(Item item) => _freeLength > 0.01f || blockTake;
 
     // Update is called once per frame
     void FixedUpdate()
@@ -90,7 +93,7 @@ public abstract class ConveyorBelt : ItemTaker
 
             if (item.Distance >= _freeLength) // Remove if at/past end
             {
-                Debug.Log($"Blocking '{item.Item.gameObject.name}', _freeLength: {_freeLength}");
+                Debug.Log($"Blocking, _freeLength: {_freeLength}");
                 item.Distance = _freeLength;
                 _freeLength = Mathf.Max(_freeLength - itemSize, 0);
                 item.Blocked = true;
@@ -98,14 +101,12 @@ public abstract class ConveyorBelt : ItemTaker
 
             UpdateItemTransform(item); // s l i d e
         }
-        
-        Debug.Log($"canTake: {CanTake(transform)}");
     }
 
     private void UpdateItemTransform(ConveyorItem item)
     {
-        item.Item.position = CalculatePosition(item.Distance / length);
-        item.Item.rotation = CalculateRotation(item.Distance / length);
+        item.Item.Position = CalculatePosition(item.Distance / length);
+        item.Item.Rotation = CalculateRotation(item.Distance / length);
     }
 
     protected abstract Vector3 CalculatePosition(float lerp);

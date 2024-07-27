@@ -1,16 +1,15 @@
 using DefaultNamespace;
-using UnityEngine;
 
 public abstract class ItemTaker : Device
 {
     public ItemTaker receiver;
 
-    public abstract void Take(Transform item, float startingDistance);
-    public abstract bool CanTake(Transform item);
+    public abstract void Take(Item item, float startingDistance);
+    public abstract bool CanTake(Item item);
     
-    protected bool CanGive(Transform item) => receiver && receiver.CanTake(item);
+    protected bool CanGive(Item item) => receiver && receiver.CanTake(item);
 
-    protected void Give(Transform item, float startingDistance)
+    protected void Give(Item item, float startingDistance)
     {
         receiver.Take(item, startingDistance);
     }
