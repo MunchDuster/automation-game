@@ -4,7 +4,6 @@ using UnityEngine;
 public class PathGenerator : MonoBehaviour
 {
     public int length = 20;
-    public ChunkManager manager;
     public Extractor extractorPrefab;
     public Storage storagePrefab;
     public ConveyorBelt[] conveyorPrefabs;
@@ -16,6 +15,8 @@ public class PathGenerator : MonoBehaviour
 
     private void GeneratePath()
     {
+        ChunkManager manager = ChunkManager.Instance;
+        
         Vector3 curPosition = transform.position;
         Quaternion curRotation = Quaternion.Euler(0, 90 * Random.Range(0, 4), 0);
         ItemTaker lastItem = Instantiate(extractorPrefab, curPosition, curRotation, transform);

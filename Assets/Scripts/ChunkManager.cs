@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ namespace DefaultNamespace
     /// </summary>
     public class ChunkManager  : MonoBehaviour
     {
+        public static ChunkManager Instance;
+        
         public Transform deviceContainer;
 
         private readonly Dictionary<Vector3Int, Chunk> _chunks = new();
@@ -16,10 +19,17 @@ namespace DefaultNamespace
 
         private void Start()
         {
+            Instance = this;
+            
             if (initializeOnStart)
             {
                 InitialiseExistingDevices(deviceContainer, true);
             }
+        }
+
+        private void OnDestroy()
+        {
+            Instance = null;
         }
 
         /// <summary>
