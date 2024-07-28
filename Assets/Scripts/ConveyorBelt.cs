@@ -26,8 +26,8 @@ public abstract class ConveyorBelt : ItemTaker
         public Vector3 localPosition;
         public Transform parent;
         public Quaternion localRotation => quaternion.Euler(localRotationEuler);
-        public Quaternion rotation => parent.rotation * localRotation;
-        public Vector3 position => parent.TransformPoint(localPosition);
+        public Quaternion rotation => parent != null ? parent.rotation * localRotation : Quaternion.identity;
+        public Vector3 position => parent != null ? parent.TransformPoint(localPosition) : Vector3.zero;
     }
     // DEBUG
     [SerializeField] [Range(0f, 1f)] private float lerp = 0;
