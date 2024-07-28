@@ -17,9 +17,13 @@ namespace DefaultNamespace
         private readonly Dictionary<Vector3Int, Chunk> _chunks = new();
         [SerializeField] private bool initializeOnStart = true;
 
-        private void Start()
+        private void Awake()
         {
             Instance = this;
+        }
+
+        private void Start()
+        {
             
             if (initializeOnStart)
             {
