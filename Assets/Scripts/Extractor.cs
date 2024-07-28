@@ -14,6 +14,8 @@ public class Extractor : ItemTaker
     private Item _item;
     private int _itemNum;
     
+    protected virtual int typeIndex => 1;
+    
     public override void Take(Item item, float startingDistance)
     {
         throw new Exception("Extractor is being given item!");

@@ -2,8 +2,15 @@ using UnityEngine;
 
 namespace DefaultNamespace
 {
-    public class ConveyorBeltTurn : ConveyorBelt
+    /// <summary>
+    /// Conveyor belt around a corner.
+    /// Although this is sufficent to technically work.
+    /// Each type of turn should be a separate inheritor to have unique typeIndexes.
+    /// </summary>
+    public abstract class ConveyorBeltTurn : ConveyorBelt
     {
+        protected virtual int typeIndex => 10;
+        
         protected override float length => Vector3.Distance(pivot.position, start.position) * Mathf.PI / 2f; // 90-degree angle is 1/4 of 2*pi*r = r*pi/2
         
         [SerializeField] private Point pivot;

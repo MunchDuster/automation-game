@@ -6,6 +6,8 @@ using UnityEngine;
 /// </summary>
 public class Storage : ItemTaker
 {
+    protected virtual int typeIndex => 2;
+
     public override Vector3Int[] Inputs => new[] { GetLocalDirection(Vector3.forward) };
 
     public override void Take(Item item, float startingDistance) => item.Destroy();
