@@ -7,7 +7,6 @@ using UnityEngine;
 /// </summary>
 public class Extractor : ItemTaker
 {
-    [SerializeField] private GameObject itemPrefab;
     [SerializeField] private float extractionSpeed = 2;
     
     private float _timeSinceLastExtraction;
