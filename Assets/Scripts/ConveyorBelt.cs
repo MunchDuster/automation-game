@@ -69,7 +69,6 @@ public abstract class ConveyorBelt : ItemTaker
 
     public override bool CanTake(Item item) => _freeLength > 0.01f || blockTake;
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if(_items.Count == 0)
@@ -84,7 +83,6 @@ public abstract class ConveyorBelt : ItemTaker
         {
             if (CanGive(0))
             {
-                Debug.Log("Giving item");
                 Give(0);
             }
             OnTriedGive?.Invoke();
@@ -103,7 +101,6 @@ public abstract class ConveyorBelt : ItemTaker
 
             if (item.Distance >= _freeLength) // Remove if at/past end
             {
-                Debug.Log($"Blocking, _freeLength: {_freeLength}");
                 item.Distance = _freeLength;
                 _freeLength = Mathf.Max(_freeLength - itemSize, 0);
                 item.Blocked = true;
