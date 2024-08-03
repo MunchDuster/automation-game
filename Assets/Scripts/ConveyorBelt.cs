@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DefaultNamespace;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -15,9 +16,9 @@ public abstract class ConveyorBelt : ItemTaker
     
     public Point start;
     public Point end;
-    [SerializeField] private float speed = 2;
-    [SerializeField] private float itemSize = 0.4f;
-    [SerializeField] private bool blockTake = false;
+    private float speed = 2;
+    private float itemSize = 0.4f;
+    private bool blockTake = false;
 
     [Serializable]
     public struct Point
@@ -29,8 +30,6 @@ public abstract class ConveyorBelt : ItemTaker
         public Quaternion rotation => parent != null ? parent.rotation * localRotation : Quaternion.identity;
         public Vector3 position => parent != null ? parent.TransformPoint(localPosition) : Vector3.zero;
     }
-    // DEBUG
-    [SerializeField] [Range(0f, 1f)] private float lerp = 0;
     
     public Action OnTriedGive;
     private class ConveyorItem
@@ -50,11 +49,6 @@ public abstract class ConveyorBelt : ItemTaker
     private List<ConveyorItem> _items = new();
     private float _freeLength; // Length that is not blocked
 
-    protected override void Awake()
-    {
-        base.Awake();
-        _freeLength = length;
-    }
 
     public override void Take(Item item, float startingDistance)
     {
@@ -69,7 +63,7 @@ public abstract class ConveyorBelt : ItemTaker
 
     public override bool CanTake(Item item) => _freeLength > 0.01f || blockTake;
 
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if(_items.Count == 0)
         {
@@ -136,8 +130,6 @@ public abstract class ConveyorBelt : ItemTaker
 
     protected virtual void OnDrawGizmosSelected()
     {
-        if (!transform) return;
-
         Vector3 lastPoint = CalculatePosition(0);
         const float delta = 1f / 20f;
         for (float i = delta; i <= 1.001f; i += delta)
@@ -151,14 +143,16 @@ public abstract class ConveyorBelt : ItemTaker
         Gizmos.color = Color.red;
         DrawArrow(start);
         DrawArrow(end);
-        
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawSphere(CalculatePosition(lerp), 0.1f);
     }
 
     protected void DrawArrow(Point point)
     {
         Gizmos.DrawWireSphere(point.position, 0.03f);
         Gizmos.DrawLine(point.position, point.position +  point.rotation * (Vector3.forward * 0.3f));
+    }
+
+    protected ConveyorBelt(Vector3Int position, Quaternion rotation, ItemTaker receiver) : base(position, rotation, receiver)
+    {
+        _freeLength = length;
     }
 }

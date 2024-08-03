@@ -1,22 +1,24 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-public abstract class Device : MonoBehaviour
+public abstract class Device
 {
     public static Dictionary<int, List<Device>> Instances = new();
 
     protected virtual int typeIndex => -1;
     
-    [HideInInspector] public Vector3Int position;
-    [HideInInspector] public Quaternion rotation;
+    [HideInInspector] public Vector3Int Position;
+    [HideInInspector] public Quaternion Rotation;
     
     public virtual Vector3Int[] Inputs => new[] {GetLocalDirection(Vector3.back)};
 
-    protected virtual void Awake()
+    public Device(Vector3Int position, Quaternion rotation)
     {
-        Vector3 worldPos = transform.position;
-        position = FromV3(worldPos);
-
+        Position = position;
+        Rotation = rotation;
+        
         if (!Instances.TryGetValue(typeIndex, out List<Device> list))
         {
             list = new();
@@ -25,11 +27,18 @@ public abstract class Device : MonoBehaviour
         Instances[typeIndex].Add(this);
     }
 
+    public void Destroy()
+    {
+        Instances[typeIndex].Remove(this);
+    }
+
     protected Vector3Int GetLocalDirection(Vector3 direction)
     {
-        Vector3 localDirection = transform.rotation * direction;
+        Vector3 localDirection = Rotation * direction;
         return FromV3(localDirection);
     }
 
     public static Vector3Int FromV3(Vector3 pos) => new(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y), Mathf.RoundToInt(pos.z));
+    
+    public static implicit operator bool(Device item) => item != null; // For inner peace
 }

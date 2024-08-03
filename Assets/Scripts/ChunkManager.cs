@@ -24,7 +24,6 @@ namespace DefaultNamespace
 
         private void Start()
         {
-            
             if (initializeOnStart)
             {
                 InitialiseExistingDevices(deviceContainer, true);
@@ -73,7 +72,7 @@ namespace DefaultNamespace
                 
                 foreach (Vector3Int inputOffset in taker.Inputs)
                 {
-                    Vector3Int inputPos = taker.position + inputOffset;
+                    Vector3Int inputPos = taker.Position + inputOffset;
                     Vector3Int inputChunkPos = Chunk.GetChunkPosition(inputPos);
                     Vector3Int inputChunkLocalPos = Chunk.GetChunkLocalPosition(inputPos);
 
@@ -101,12 +100,12 @@ namespace DefaultNamespace
                     if (!success)
                     {
                         // Log everything needed to understand why input wasnt found.
-                        Debug.Log($"Couldn't find connection for {device.gameObject.name}:  at {device.position}, local pos: {Chunk.GetChunkLocalPosition(device.position)}.");
+                        Debug.Log($"Couldn't find connection for {device}:  at {device.Position}, local pos: {Chunk.GetChunkLocalPosition(device.Position)}.");
                         Debug.Log($"Looking for input at {inputPos}, local pos: {inputChunkLocalPos}, chunk pos: {inputChunkPos}");
                         continue;
                     }
 
-                    inputGiver.receiver = taker;
+                    inputGiver.SetReceiver(taker);
                 }
             }
             Debug.Log("Connections complete.");
@@ -117,17 +116,17 @@ namespace DefaultNamespace
         /// </summary>
         public void AddDevice(Device device)
         {
-            Vector3Int chunkPos = Chunk.GetChunkPosition(device.position);
+            Vector3Int chunkPos = Chunk.GetChunkPosition(device.Position);
             if (!_chunks.TryGetValue(chunkPos, out Chunk chunk))
             {
                 chunk = new Chunk(chunkPos);
                 _chunks.Add(chunkPos, chunk);
             }
 
-            Vector3Int localPos = Chunk.GetChunkLocalPosition(device.position);
+            Vector3Int localPos = Chunk.GetChunkLocalPosition(device.Position);
             if (chunk.TryGetItem(localPos, out Device device2))
             {
-                Debug.LogError($"Cant add device {device.gameObject.name} to local pos {localPos} as place is already taken by {device2.gameObject.name}");
+                Debug.LogError($"Cant add device {device} to local pos {localPos} as place is already taken by {device2}");
                 return;
             }
             chunk.AddItem(device);
@@ -135,7 +134,7 @@ namespace DefaultNamespace
 
         public void RemoveDevice(Device device)
         {
-            Vector3Int chunkPos = Chunk.GetChunkPosition(device.position);
+            Vector3Int chunkPos = Chunk.GetChunkPosition(device.Position);
             if (!_chunks.TryGetValue(chunkPos, out Chunk chunk))
             {
                 chunk = new Chunk(chunkPos);

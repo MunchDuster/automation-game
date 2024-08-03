@@ -17,6 +17,6 @@ public class ConveyorReceiverSwitcher : MonoBehaviour
     {
         _index++;
         _index %= receivers.Length;
-        belt.receiver = receivers[_index];
+        belt.SetReceiver(receivers[_index]);
     }
 }

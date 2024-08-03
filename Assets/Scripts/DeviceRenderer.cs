@@ -13,7 +13,7 @@ public class DeviceRenderer : MonoBehaviour
     public class DeviceRenderSettings
     {
         public int type;
-        public Material material;
+        public Material[] materials;
         public Mesh mesh;
     }
 
@@ -21,15 +21,24 @@ public class DeviceRenderer : MonoBehaviour
 
     void Update()
     {
-        foreach (var type in devices)
+        foreach (var type in devices)   
         {
+            if (!Device.Instances.ContainsKey(type.type))
+            {
+                Debug.Log("None of " + type.type + " found");
+                continue;
+            }
+            
             List<Matrix4x4> matrices = new();
             foreach (Device device in Device.Instances[type.type])
             {
-                matrices.Add(Matrix4x4.TRS(device.position, device.rotation, Vector3.one));
+                matrices.Add(Matrix4x4.TRS(device.Position, device.Rotation, Vector3.one));
             }
 
-            Graphics.DrawMeshInstanced(type.mesh, 0, type.material, matrices);
+            for(int i = 0; i < type.materials.Length; i++)
+            {
+                Graphics.DrawMeshInstanced(type.mesh, i, type.materials[i], matrices);
+            }
         }
     }
 }

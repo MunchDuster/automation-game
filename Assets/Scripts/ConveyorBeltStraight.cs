@@ -4,7 +4,12 @@ namespace DefaultNamespace
 {
     public class ConveyorBeltStraight : ConveyorBelt
     {
-        protected virtual int typeIndex => 11;
+        public const int TypeIndex = 11;
+        protected override int typeIndex => TypeIndex;
+
+        public ConveyorBeltStraight(Vector3Int position, Quaternion rotation, ItemTaker receiver) : base(position, rotation, receiver)
+        {
+        }
 
         protected override Vector3 CalculatePosition(float lerp)
         {
@@ -13,7 +18,7 @@ namespace DefaultNamespace
 
         protected override Quaternion CalculateRotation(float lerp)
         {
-            return transform.rotation;
+            return Rotation;
         }
     }
 }

@@ -1,6 +1,12 @@
 using DefaultNamespace;
+using UnityEngine;
 
 public class ConveyorBeltTurnLeft : ConveyorBeltTurn
 {
-    protected virtual int typeIndex => 13;
+    public const int TypeIndex = 13;
+    protected override int typeIndex => TypeIndex;
+
+    public ConveyorBeltTurnLeft(Vector3Int position, Quaternion rotation, ItemTaker receiver) : base(position, rotation, receiver)
+    {
+    }
 }

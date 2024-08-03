@@ -1,4 +1,5 @@
 using DefaultNamespace;
+using UnityEngine;
 
 /// <summary>
 /// Main class for exchange of items.
@@ -6,7 +7,9 @@ using DefaultNamespace;
 /// </summary>
 public abstract class ItemTaker : Device
 {
-    public ItemTaker receiver;
+    protected ItemTaker receiver;
+
+    public void SetReceiver(ItemTaker receiver) => this.receiver = receiver;
 
     public abstract void Take(Item item, float startingDistance);
     public abstract bool CanTake(Item item);
@@ -25,5 +28,10 @@ public abstract class ItemTaker : Device
     protected void Give(Item item, float startingDistance)
     {
         receiver.Take(item, startingDistance);
+    }
+
+    protected ItemTaker(Vector3Int position, Quaternion rotation, ItemTaker receiver) : base(position, rotation)
+    {
+        
     }
 }

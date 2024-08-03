@@ -9,7 +9,6 @@ namespace DefaultNamespace
     /// </summary>
     public abstract class ConveyorBeltTurn : ConveyorBelt
     {
-        protected virtual int typeIndex => 10;
         
         protected override float length => Vector3.Distance(pivot.position, start.position) * Mathf.PI / 2f; // 90-degree angle is 1/4 of 2*pi*r = r*pi/2
         
@@ -37,6 +36,10 @@ namespace DefaultNamespace
             
             Gizmos.color = Color.green;
             DrawArrow(pivot);
+        }
+
+        protected ConveyorBeltTurn(Vector3Int position, Quaternion rotation, ItemTaker receiver) : base(position, rotation, receiver)
+        {
         }
     }
     

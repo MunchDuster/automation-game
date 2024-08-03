@@ -1,19 +1,24 @@
 using System;
+using DefaultNamespace;
 using UnityEngine;
 
 /// <summary>
 /// These are the source of items, the equivalent of drills and miners in other games.
 /// THESE DO NOT TAKE IN ITEMS, ONLY GIVE.
 /// </summary>
-public class Extractor : ItemTaker
+public class Extractor : ConveyorBeltStraight
 {
     [SerializeField] private float extractionSpeed = 2;
     
     private float _timeSinceLastExtraction;
     private Item _item;
     private int _itemNum;
-    
-    protected virtual int typeIndex => 1;
+
+    public Extractor(Vector3Int position, Quaternion rotation, ItemTaker receiver) : base(position, rotation, receiver)
+    {
+    }
+
+    protected override int typeIndex => 1;
     
     public override void Take(Item item, float startingDistance)
     {
@@ -25,7 +30,7 @@ public class Extractor : ItemTaker
         throw new Exception("Extractor is being asked if can take item!");
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
         if (_item)
         {
@@ -45,7 +50,10 @@ public class Extractor : ItemTaker
         }
 
         _timeSinceLastExtraction = 0;
-        _item = new Item(transform.position, transform.rotation);
+        _item = new Item(Position, Rotation);
         _itemNum++;
+        
+        base.FixedUpdate();
     }
+    
 }

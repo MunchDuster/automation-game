@@ -21,11 +21,11 @@ namespace DefaultNamespace
 
         public void AddItem(Device device)
         {
-            _devices.Add(GetChunkLocalPosition(device.position), device);
+            _devices.Add(GetChunkLocalPosition(device.Position), device);
         }
         public void RemoveItem(Device device)
         {
-            _devices.Remove(GetChunkLocalPosition(device.position));
+            _devices.Remove(GetChunkLocalPosition(device.Position));
         }
         
         public List<Device> Items => _devices.Values.ToList();
@@ -34,7 +34,7 @@ namespace DefaultNamespace
         /// Checks if the POSITION is WITHIN the chunk.
         /// (doesn't check if is listed as part of chunk)
         /// </summary>
-        public bool IsItemInChunk(Device device) => GetChunkLocalPosition(device.position) == _position;
+        public bool IsItemInChunk(Device device) => GetChunkLocalPosition(device.Position) == _position;
        
         public bool TryGetItem(Vector3Int localPosition, out Device device) => _devices.TryGetValue(localPosition, out device);
 
