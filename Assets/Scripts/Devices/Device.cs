@@ -17,7 +17,7 @@ public abstract class Device
     public Device(Vector3Int position, Quaternion rotation)
     {
         Position = position;
-        Rotation = rotation;
+        Rotation = rotation;  
         
         if (!Instances.TryGetValue(typeIndex, out List<Device> list))
         {
