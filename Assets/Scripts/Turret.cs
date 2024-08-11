@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Turret : MonoBehaviour
 {
@@ -22,6 +24,13 @@ public class Turret : MonoBehaviour
     [Header("Bounds")]
     public float verticalSliderMax = 1;
     public float verticalSliderMin = 0;
+
+    [Header("Shooting (Raycast)")]
+    public float damage = 25f;
+    public float maxRange = 1000;
+    public ParticleSystem hitFX;
+    public Transform shootPoint;
+    public LayerMask layerMask;
     
     [Header("_recoil")]
     public float recoilMax = 0.1f;
@@ -30,21 +39,22 @@ public class Turret : MonoBehaviour
     public float recoilPitchAngleMin = 3f;
     public float recoilYawAngleMax = 5f;
     public float recoilYawAngleMin = 1f;
-    public float recoilTolerance = 0.001f;
+    public float totalRecoilTime = 0.001f;
     public float recoilSpeed = 50;
-    public float fireSpeed = 50;
+    public AnimationCurve recoilCurve;
     private bool _recoiling;
-    private bool _firing;
+    private float _curRecoilTime;
     
     [Header("Values")]
     public float verticalSlide;
     public float yaw;
     public float pitch;
-    public bool fire;
     
     private float _recoil = 0f;
     private float _recoilYawAngleCurMax;
     private float _recoilPitchAngleCurMax;
+    private float _recoilCurMax;
+    private Vector3 _lastHitPoint;
 
     [Header("FX")]
     public ParticleSystem muzzleFlash;
@@ -57,47 +67,58 @@ public class Turret : MonoBehaviour
         verticalSlide = Mathf.Clamp(verticalSlide, verticalSliderMin, verticalSliderMax);
         verticalSlider.localPosition = verticalSliderAxis * verticalSlide;
 
-        float recoilAmount = Mathf.Lerp(recoilMin, recoilMax, Random.value);
-        
-        float _recoilYaw = _recoilYawAngleCurMax * (_recoil / recoilAmount);
-        float _recoilPitch = _recoilPitchAngleCurMax * (_recoil / recoilAmount);
-
-        if (_firing)
+        if (_recoiling)
         {
-            _recoil = Mathf.Lerp(_recoil, recoilAmount, Time.deltaTime * fireSpeed);
-            if (recoilAmount - _recoil < 0.01f)
-            {
-                _firing = false;
-                _recoiling = true;
-            }
+            Recoil();
         }
         else
         {
-            if (_recoiling)
-            {
-                Recoil();
-            }
-            else
-            {
-                Fire();
-            }
+            Fire();
         }
+    
+        _recoilCurMax = Mathf.Lerp(recoilMin, recoilMax, Random.value);
+        float recoilYaw = _recoilYawAngleCurMax * (_recoil / _recoilCurMax);
+        float recoilPitch = _recoilPitchAngleCurMax * (_recoil / _recoilCurMax);
         
-        yawRotator.localRotation = Quaternion.Euler(yawOffset) * Quaternion.Euler(yawAxis * (yaw - _recoilYaw));
-        pitchRotator.localRotation = Quaternion.Euler(pitchOffset) * Quaternion.Euler(pitchAxis * (pitch - _recoilPitch));
+        yawRotator.localRotation = Quaternion.Euler(yawOffset) * Quaternion.Euler(yawAxis * (yaw - recoilYaw));
+        pitchRotator.localRotation = Quaternion.Euler(pitchOffset) * Quaternion.Euler(pitchAxis * (pitch - recoilPitch));
         
         recoilSlider.localPosition = recoilSliderAxis * _recoil;
-        boltSlider.localPosition = boltSliderAxis * -_recoil;
+        boltSlider.localPosition = boltSliderAxis * -_recoil/2f;
     }
 
     public void Fire()
     {
-        _firing = true;
+        _recoiling = true;
         muzzleFlash.Play();
             
         AudioSource source = shotSounds[(++_shotSoundIndex)%shotSounds.Length];
         source.pitch = Random.Range(0.99f, 1.01f);
         source.Play();
+
+        if (Physics.Raycast(shootPoint.position, shootPoint.forward, out RaycastHit hit, maxRange, layerMask))
+        {
+            hitFX.transform.position = hit.point;
+            hitFX.transform.rotation = Quaternion.FromToRotation(Vector3.forward, hit.normal);
+            
+            Color color = hit.collider.GetComponent<MeshRenderer>().material.color;
+            float brightnessShift = 0.05f;
+            Color darkColor = new Color(color.r - brightnessShift, color.g - brightnessShift, color.b - brightnessShift, 1);
+            Color brightColor = new Color(color.r + brightnessShift, color.g + brightnessShift, color.b + brightnessShift, 1);
+            var main = hitFX.main;
+            main.startColor = new ParticleSystem.MinMaxGradient(darkColor, brightColor);
+            
+            hitFX.Play();
+            _lastHitPoint = hit.point;
+            
+            Debug.DrawRay(hit.point, hitFX.transform.rotation * Vector3.forward);
+
+            Health health = hit.collider.gameObject.GetComponent<Health>();
+            if (health)
+            {
+                health.TakeDamage(damage);
+            }
+        }
         
         _recoilYawAngleCurMax = Mathf.Lerp(recoilYawAngleMin, recoilYawAngleMax, Random.value);
         _recoilPitchAngleCurMax = Mathf.Lerp(recoilPitchAngleMin, recoilPitchAngleMax, Random.value);
@@ -105,10 +126,19 @@ public class Turret : MonoBehaviour
 
     private void Recoil()
     {
-        _recoil *= 1f - recoilSpeed * Time.deltaTime;
-        if (_recoil < recoilTolerance)
+        _curRecoilTime += Time.deltaTime * recoilSpeed;
+        if (_curRecoilTime > totalRecoilTime)
         {
             _recoiling = false;
+            _curRecoilTime = 0;
+            return;
         }
+        _recoil = recoilCurve.Evaluate(_curRecoilTime / totalRecoilTime) * _recoilCurMax;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(_lastHitPoint, 0.1f);
     }
 }
